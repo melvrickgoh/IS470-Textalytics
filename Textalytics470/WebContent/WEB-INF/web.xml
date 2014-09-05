@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>Textalytics</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <listener>
+        <listener-class>textalytics.InitializeLibraries</listener-class>
+ 	</listener>
+ 	
+  <servlet>
+    <description>Servlet Parse HTML</description>
+    <display-name>HTMLParseServlet</display-name>
+    <servlet-name>HTMLParseServlet</servlet-name>
+    <servlet-class>textalytics.servlet.HTMLParseServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HTMLParseServlet</servlet-name>
+    <url-pattern>/html-parse</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <description>Servlet JSoup Parse HTML</description>
+    <display-name>JSoupParseServlet</display-name>
+    <servlet-name>JSoupParseServlet</servlet-name>
+    <servlet-class>textalytics.servlet.JSoupParseServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JSoupParseServlet</servlet-name>
+    <url-pattern>/jsoup-parse</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description>JSoup Table Parse HTML</description>
+    <display-name>TableServlet</display-name>
+    <servlet-name>TableServlet</servlet-name>
+    <servlet-class>textalytics.servlet.TableServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TableServlet</servlet-name>
+    <url-pattern>/table-parse</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description>DB Operations</description>
+    <display-name>DBOpsServlet</display-name>
+    <servlet-name>DBOpsServlet</servlet-name>
+    <servlet-class>textalytics.servlet.DatabaseServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DBOpsServlet</servlet-name>
+    <url-pattern>/databaseops</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+	  <servlet-name>database.jsp</servlet-name>
+	  <jsp-file>/database.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+	  <servlet-name>database.jsp</servlet-name>
+	  <url-pattern>/database</url-pattern>
+  </servlet-mapping>
+</web-app>
