@@ -80,9 +80,12 @@ public class TableServlet extends HttpServlet {
 				System.out.println("head document " + visitDoc.head().text());
 				Elements tables = visitDoc.select("table");
 				//parsing the 1st table
-				Element table = tables.get(0);
-				this.tp.parse(year,semester,linkURL,table,context,writer);
-				recordPageLinks(linkURL,visitDoc,context);
+				
+				//if (year1==2013&&year2==2014&&semester==2){
+					Element table = tables.get(0);
+					this.tp.parse(year,semester,linkURL,table,context,writer);
+					//recordPageLinks(linkURL,visitDoc,context);
+				//}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

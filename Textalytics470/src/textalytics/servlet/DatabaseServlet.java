@@ -15,11 +15,13 @@ import org.json.simple.JSONValue;
 
 import textalytics.dao.CrawlerDAO;
 import textalytics.dao.LinksDAO;
+import textalytics.dao.StemsDAO;
 import textalytics.dao.StudentsDAO;
 import textalytics.dao.SupervisorDAO;
 import textalytics.dao.TeamsDAO;
 import textalytics.entity.CrawlHistory;
 import textalytics.entity.Link;
+import textalytics.entity.StemRecord;
 import textalytics.entity.Student;
 import textalytics.entity.Supervisor;
 import textalytics.entity.Team;
@@ -65,6 +67,7 @@ public class DatabaseServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String tableName = (String) jsonDetails.get("table");
 		
+		StemsDAO stemsDAO = (StemsDAO)context.getAttribute("stemsDAO");
 		CrawlerDAO crawlDAO = (CrawlerDAO)context.getAttribute("crawlerDAO");
 		TeamsDAO teamsDAO = (TeamsDAO)context.getAttribute("teamsDAO");
 		LinksDAO linksDAO = (LinksDAO)context.getAttribute("linksDAO");
@@ -115,6 +118,19 @@ public class DatabaseServlet extends HttpServlet {
 					dataArrayLinks.add(sa);
 				}
 				return dataArrayLinks;
+			case "stems":
+				List<StemRecord> stems = stemsDAO.selectAll();
+				JSONArray dataArrayStems = new JSONArray();
+				for (StemRecord s: stems){
+					JSONArray sr = new JSONArray();
+					sr.add(s.getId());
+					sr.add(s.getTeamID());
+					sr.add(s.getWord());
+					sr.add(s.getType());
+					sr.add(s.getKeyword().getTermsDBString());
+					dataArrayStems.add(sr);
+				}
+				return dataArrayStems;
 			case "teams":
 				List<Team> teams = teamsDAO.selectAll();
 				JSONArray dataArrayTeams = new JSONArray();
@@ -125,6 +141,7 @@ public class DatabaseServlet extends HttpServlet {
 					sa.add(s.getYear());
 					sa.add(s.getSemester());
 					sa.add(s.getDescription());
+					sa.add(s.getKeyphrases());
 					sa.add(s.getSponsor());
 					sa.add(s.getPage());
 					sa.add(s.getPitch());
@@ -147,12 +164,16 @@ public class DatabaseServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String tableName = (String) jsonDetails.get("table");
 		
+		StemsDAO stemsDAO = (StemsDAO)context.getAttribute("stemsDAO");
 		CrawlerDAO crawlDAO = (CrawlerDAO)context.getAttribute("crawlerDAO");
 		TeamsDAO teamsDAO = (TeamsDAO)context.getAttribute("teamsDAO");
 		LinksDAO linksDAO = (LinksDAO)context.getAttribute("linksDAO");
 		StudentsDAO studentsDAO = (StudentsDAO)context.getAttribute("studentsDAO");
 		SupervisorDAO supervisorDAO = (SupervisorDAO)context.getAttribute("supervisorDAO");
 		switch(tableName){
+			case "stems":
+				stemsDAO.truncateTable();
+				break;
 			case "crawler":
 				crawlDAO.truncateTable();
 				break;
@@ -174,6 +195,7 @@ public class DatabaseServlet extends HttpServlet {
 				supervisorDAO.truncateTable();
 				linksDAO.truncateTable();
 				teamsDAO.truncateTable();
+				stemsDAO.truncateTable();
 				break;
 	    	default:
 	    		return false;

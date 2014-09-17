@@ -3,9 +3,33 @@ package textalytics.entity;
 import java.util.ArrayList;
 
 public class Team {
-	private String name, page, pitch, acceptance, poster, midterms, finals, projectreference, description, members, sponsor, descriptionLinks, sponsorLinks;
-	private int semester, year;
-
+	private String name, page, pitch, acceptance, poster, midterms, finals, projectreference, description, members, sponsor, descriptionLinks, sponsorLinks,keyphrases;
+	private int semester, year,id;
+	
+	public Team(int id, String name, String page, String pitch, String acceptance,
+			String poster, String midterms, String finals,
+			String projectreference, String description, String members,
+			String sponsor, String descriptionLinks, String sponsorLinks, int semester, int year, String keyphrases) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.page = page;
+		this.pitch = pitch;
+		this.acceptance = acceptance;
+		this.poster = poster;
+		this.midterms = midterms;
+		this.finals = finals;
+		this.projectreference = projectreference;
+		this.description = description;
+		this.members = members;
+		this.sponsor = sponsor;
+		this.descriptionLinks = descriptionLinks;
+		this.sponsorLinks = sponsorLinks;
+		this.semester = semester;
+		this.year = year;
+		this.keyphrases = keyphrases;
+	}
+	
 	public Team(String name, String page, String pitch, String acceptance,
 			String poster, String midterms, String finals,
 			String projectreference, String description, String members,
@@ -105,6 +129,12 @@ public class Team {
 	public void setYear(int year) {
 		this.year = year;
 	}
+	public int getID() {
+		return id;
+	}
+	public void setID(int id) {
+		this.id = id;
+	}
 	public String getSponsorLinks() {
 		return sponsorLinks;
 	}
@@ -117,6 +147,15 @@ public class Team {
 	public void setDescriptionLinks(String descriptionLinks) {
 		this.descriptionLinks = descriptionLinks;
 	}
-	
-	
+
+	public String getKeyphrases() {
+		return keyphrases;
+	}
+
+	public void setKeyphrases(String keyphrases) {
+		this.keyphrases = keyphrases;
+	}
+	public String[] keyphraseList(){
+		return keyphrases.split(",");
+	}
 }

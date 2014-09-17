@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import textalytics.entity.Link;
 import textalytics.entity.Team;
 
 public class TeamsDAO {
@@ -27,7 +26,9 @@ public class TeamsDAO {
 			SPONSOR = "sponsor",
 			SPONSORLINK = "sponsorlink",
 			SEMESTER = "semester",
-			YEAR = "year";
+			YEAR = "year",
+			ID = "id",
+			DES_KEYWORDS = "descriptionkeywords";
 	public TeamsDAO(pgDAO pd){
 		dao = pd;
 	}
@@ -40,6 +41,7 @@ public class TeamsDAO {
 		
 		try{
 			while(rs.next()){
+				int id = rs.getInt(ID);
 				String name = rs.getString(NAME);
 				String page = rs.getString(PAGE);
 				String pitch = rs.getString(PITCH);
@@ -55,7 +57,8 @@ public class TeamsDAO {
 				String sponsorLinks = rs.getString(SPONSORLINK);
 				int year = rs.getInt(YEAR);
 				int semester = rs.getInt(SEMESTER);
-				teams.add(new Team(name,page,pitch,acceptance,poster,midterms,finals,projectreference,description,members,sponsor,descriptionLinks,sponsorLinks,semester,year));
+				String keywords = rs.getString(DES_KEYWORDS);
+				teams.add(new Team(id,name,page,pitch,acceptance,poster,midterms,finals,projectreference,description,members,sponsor,descriptionLinks,sponsorLinks,semester,year,keywords));
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -70,12 +73,43 @@ public class TeamsDAO {
 		return teams;
 	}
 	
+	public void updateTeamKeyphrases(int id,String keywords){
+		HashMap<String,String> teamLinks = new HashMap<String,String>();
+		teamLinks.put("name", TABLE_NAME);
+		
+		teamLinks.put("attributes", "1");
+		teamLinks.put("attribute_1_name", DES_KEYWORDS);
+		
+		teamLinks.put("conditions", "1");
+		teamLinks.put("condition_1", ID+"="+id);
+		
+		teamLinks.put("values", "1");
+		
+		teamLinks.put("values_1_attr", DES_KEYWORDS);
+		teamLinks.put("values_1", keywords);
+		teamLinks.put("values_1_type", "string");
+		
+		teamLinks.put("returns","1");
+		teamLinks.put("return_1",DES_KEYWORDS);
+		
+		try {
+			HashMap<String,Object> results = dao.update(teamLinks);
+			ResultSet rs = (ResultSet)results.get("ResultSet");
+			rs.close();
+			Connection conn = (Connection)results.get("Connection");
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void updateTeams(List<Team> teams){
 		for (int i = 0; i<teams.size(); i++){
 			HashMap<String,String> teamLinks = new HashMap<String,String>();
 			teamLinks.put("name", TABLE_NAME);
 			
-			teamLinks.put("attributes", "14");
+			teamLinks.put("attributes", "15");
 			teamLinks.put("attribute_1_name", PAGE);
 			teamLinks.put("attribute_2_name", PITCH);
 			teamLinks.put("attribute_3_name", ACCEPTANCE);
@@ -90,6 +124,7 @@ public class TeamsDAO {
 			teamLinks.put("attribute_12_name", YEAR);
 			teamLinks.put("attribute_13_name", DESCRIPTIONLINKS);
 			teamLinks.put("attribute_14_name", SPONSORLINK);
+			teamLinks.put("attribute_15_name", DES_KEYWORDS);
 			
 			Team t = teams.get(i);
 			teamLinks.put("conditions", "1");
@@ -139,6 +174,9 @@ public class TeamsDAO {
 			teamLinks.put("values_14_attr", SPONSORLINK);
 			teamLinks.put("values_14", ""+t.getSponsorLinks());
 			teamLinks.put("values_14_type", "string");
+			teamLinks.put("values_15_attr", DES_KEYWORDS);
+			teamLinks.put("values_15", ""+t.getKeyphrases());
+			teamLinks.put("values_15_type", "string");
 			
 			dao.update(teamLinks);
 		}
@@ -216,6 +254,7 @@ public class TeamsDAO {
 		
 		try {
 			while(rsTeam.next()){
+				int id = rsTeam.getInt(ID);
 				String teamname = rsTeam.getString(NAME);
 				String pageURL = rsTeam.getString(PAGE);
 				String pitchURL = rsTeam.getString(PITCH);
@@ -231,9 +270,10 @@ public class TeamsDAO {
 				int year = rsTeam.getInt(YEAR);
 				String descriptionLinks = rsTeam.getString(DESCRIPTIONLINKS);
 				String sponsorLinks = rsTeam.getString(SPONSORLINK);
+				String keywords = rsTeam.getString(DES_KEYWORDS);
 				
-				return new Team(teamname,pageURL,pitchURL,acceptanceURL,postersURL,midtermsURL,finalsURL,
-						projectReference,description,members,sponsor,descriptionLinks,sponsorLinks,semester,year);
+				return new Team(id,teamname,pageURL,pitchURL,acceptanceURL,postersURL,midtermsURL,finalsURL,
+						projectReference,description,members,sponsor,descriptionLinks,sponsorLinks,semester,year,keywords);
 			}
 			
 			if (rsTeam!=null){

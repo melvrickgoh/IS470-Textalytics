@@ -17,6 +17,7 @@
     	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     	<link href="css/simple-sidebar.css" rel="stylesheet">
     	<link href="css/dataTables.bootstrap.css" rel="stylesheet">
+    	<link href="css/dataTables.fixedColumns.css" rel="stylesheet">
     	<%
     		/*ServletContext context = getServletContext();
 			CrawlerDAO crawlDAO = (CrawlerDAO)context.getAttribute("crawlerDAO");
@@ -51,6 +52,22 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1>Data Management</h1>
+                        <p><strong>Stems Table</strong>
+                        	<a class="btn btn-danger " onclick="databaseTruncate('stems')">Truncate</a>
+                        	<a class="btn btn-info" onclick="databaseShow('stems')">Show Data</a>
+                        	<a class="btn btn-success" onclick="databaseLoad('stems')">Refresh Data</a>
+                        	<div id="stemsMsg" class="alert alert-success hide" role="alert"></div>
+                        	<div id="stemsWrapper" data-toggle="collapse" data-parent="#accordion" href="stemsTable">
+                        		<table id="stemsTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+							        <thead>
+							        </thead>
+							 
+							        <tbody id="collapseStemsContent" class="panel-collapse collapse in">
+							            
+							        </tbody>
+							  </table>
+                        	</div>
+                        </p>
                         <p><strong>Crawler Table</strong> 
                         	<a class="btn btn-danger " onclick="databaseTruncate('crawler')">Truncate</a>
                         	<a class="btn btn-info" onclick="databaseShow('crawler')">Show Data</a>
@@ -175,6 +192,7 @@
 	    <script src="js/ie10-viewport-bug-workaround.js"></script>
 	    <script src="js/dataTables.bootstrap.js"></script>
 	    <script src="js/jquery.dataTables.min.js"></script>
+	    <script src="js/dataTables.fixedColumns.js"></script>
 	    <script src="bootstrap/js/bootstrap.min.js"></script>
 	    <!-- Menu Toggle Script -->
 	    <script>
@@ -249,33 +267,76 @@
     	    				$('#crawlWrapper').empty();
     	    				$('#crawlWrapper').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="crawlerTable"></table>' );
     	    				
-    	    				$('#crawlerTable').dataTable({
+    	    				var crawlerTable = $('#crawlerTable').dataTable({
     	    	    			data:json.result,
+    	    	    			"scrollX": true,
+    	    	    	        "scrollCollapse": true,
+    	    	    			columnDefs:[
+    	    	    	    		{ "width": "50%", "targets": 0 },
+    	    	    	    		{ "width": "50%", "targets": 1 }
+    	    	    	    	],
     	    	    			columns:[
     	    	    				{title:"Link"},
     	    	    				{title:"Checksum"}
     	    	    			]
     	    	    		});
+    	    				new $.fn.dataTable.FixedColumns( crawlerTable );
     	    				break;
     	    			case 'students':
     	    				$('#studentsWrapper').empty();
     	    				$('#studentsWrapper').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="studentsTable"></table>' );
     	    				
-    	    				$('#studentsTable').dataTable({
+    	    				var studentsTable = $('#studentsTable').dataTable({
     	    	    			data:json.result,
+    	    	    			"scrollX": true,
+    	    	    	        "scrollCollapse": true,
+    	    	    			columnDefs:[
+    	    	    	    		{ "width": "40%", "targets": 0 },
+    	    	    	    		{ "width": "30%", "targets": 1 }
+    	    	    	    	],
     	    	    			columns:[
     	    	    				{title:"Name"},
     	    	    				{title:"Project"},
     	    	    				{title:"Role"}
     	    	    			]
     	    	    		});
+    	    				new $.fn.dataTable.FixedColumns( studentsTable );
+    	    				break;
+    	    			case 'stems':
+    	    				$('#stemsWrapper').empty();
+    	    				$('#stemsWrapper').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="stemsTable"></table>' );
+    	    				
+    	    				var stemsTable = $('#stemsTable').dataTable({
+    	    	    			data:json.result,
+    	    	    			"scrollX": true,
+    	    	    	        "scrollCollapse": true,
+    	    	    			columnDefs:[
+    	    	    	    		{ "width": "8%", "targets": 0 },
+    	    	    	    		{ "width": "8%", "targets": 1 },
+    	    	    	    		{ "width": "50%", "targets": 4 }
+    	    	    	    	],
+    	    	    			columns:[
+    	    	    				{title:"ID"},
+    	    	    				{title:"Team ID"},
+    	    	    				{title:"Stem"},
+    	    	    				{title:"Type"},
+    	    	    				{title:"Terms"}
+    	    	    			]
+    	    	    		});
+    	    				new $.fn.dataTable.FixedColumns( stemsTable );
     	    				break;
     	    			case 'supervisor':
     	    				$('#supervisorWrapper').empty();
     	    				$('#supervisorWrapper').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="supervisorTable"></table>' );
     	    				
-    	    				$('#supervisorTable').dataTable({
+    	    				var supervisorTable = $('#supervisorTable').dataTable({
     	    	    			data:json.result,
+    	    	    			"scrollX": true,
+    	    	    	        "scrollCollapse": true,
+    	    	    			columnDefs:[
+    	    	    	    		{ "width": "30%", "targets": 0 },
+    	    	    	    		{ "width": "20%", "targets": 1 }
+    	    	    	    	],
     	    	    			columns:[
     	    	    				{title:"Name"},
     	    	    				{title:"Team"},
@@ -283,32 +344,46 @@
     	    	    				{title:"Semester"}
     	    	    			]
     	    	    		});
+    	    				new $.fn.dataTable.FixedColumns( supervisorTable );
     	    				break;
     	    			case 'links':
     	    				$('#linksWrapper').empty();
     	    				$('#linksWrapper').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="linksTable"></table>' );
     	    				
-    	    				$('#linksTable').dataTable({
+    	    				var linksTable= $('#linksTable').dataTable({
     	    	    			data:json.result,
+    	    	    			"scrollX": true,
+    	    	    	        "scrollCollapse": true,
+    	    	    			columnDefs:[
+    	    	    			    { "width": "45%", "targets": 0 }
+    	    	    			],
     	    	    			columns:[
     	    	    				{title:"Parent"},
     	    	    				{title:"Link"},
     	    	    				{title:"Type"}
     	    	    			]
     	    	    		});
+    	    				new $.fn.dataTable.FixedColumns( linksTable );
     	    				break;
     	    			case 'teams':
     	    				$('#teamsWrapper').empty();
     	    				$('#teamsWrapper').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="teamsTable"></table>' );
     	    				
-    	    				$('#teamsTable').dataTable({
+    	    				var teamsTable = $('#teamsTable').dataTable({
     	    	    			data:json.result,
+    	    	    			"scrollX": true,
+    	    	    	        "scrollCollapse": true,
+    	    	    			columnDefs:[
+    	    	    			    { "width": "60%", "targets": 4 },
+    	    	    			    { "width": "15%", "targets": 0 }
+    	    	    			],
     	    	    			columns:[
     	    	    	    		{title:"Name"},
     	    	    	    		{title:"Members"},
     	    	    				{title:"Year"},
     	    	    				{title:"Semester"},
     	    	    				{title:"Description"},
+    	    	    				{title:"Keyphrases"},
     	    	    				{title:"Sponsor"},
     	    	    				{title:"Page"},
     	    	    				{title:"Pitch"},
@@ -320,6 +395,8 @@
     	    	    				{title:"Sponsor Links"}
     	    	    			]
     	    	    		});
+    	    				
+    	    				new $.fn.dataTable.FixedColumns( teamsTable );
     	    				break;
     	    			default:
     	    		}
@@ -333,61 +410,7 @@
 	    	databaseLoad('teams');
 	    	databaseLoad('supervisor');
 	    	databaseLoad('links');
-	        /*$('#crawlerTable').dataTable({
-    			data:[],
-    			columns:[
-    				{title:"Link"},
-    				{title:"Checksum"}
-    			]
-    		});
-	        $('#studentsTable').dataTable({
-    			data:[],
-    			columns:[
-    				{title:"Name"},
-    				{title:"Project"},
-    				{title:"Role"}
-    			]
-    		});
-	        $('#supervisorTable').dataTable({
-    			data:[],
-    			columns:[
-    				{title:"Name"},
-    				{title:"Team"},
-    				{title:"Year"},
-    				{title:"Semester"}
-    			]
-    		});
-	        $('#linksTable').dataTable({
-    			data:[],
-    			columns:[
-    				{title:"Parent"},
-    				{title:"Link"},
-    				{title:"Type"}
-    			]
-    		});
-	        $('#teamsTable').dataTable({
-    			data:[],
-    			columns:[
-    	    		{title:"Name"},
-    	    		{title:"Members"},
-    				{title:"Year"},
-    				{title:"Semester"},
-    				{title:"Description"},
-    				{title:"Sponsor"},
-    				{title:"Page"},
-    				{title:"Pitch"},
-    				{title:"Acceptance"},
-    				{title:"Poster"},
-    				{title:"Midterms"},
-    				{title:"Finals"},
-    				{title:"Description Links"},
-    				{title:"Sponsor Links"}
-    			]
-    		});
-	        $("#menu-toggle").click(function(e) {
-		        e.preventDefault();
-		        $("#wrapper").toggleClass("toggled");
-		    });*/
+	    	databaseLoad('stems');
 	    } );
 	    </script>
     </body>

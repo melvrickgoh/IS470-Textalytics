@@ -10,10 +10,12 @@ import javax.servlet.ServletContextListener;
 
 import textalytics.dao.CrawlerDAO;
 import textalytics.dao.LinksDAO;
+import textalytics.dao.StemsDAO;
 import textalytics.dao.StudentsDAO;
 import textalytics.dao.SupervisorDAO;
 import textalytics.dao.TeamsDAO;
 import textalytics.dao.pgDAO;
+import textalytics.entity.LuceneUtilities;
 
 public class InitializeLibraries implements ServletContextListener {
 	private pgDAO dao;
@@ -22,6 +24,8 @@ public class InitializeLibraries implements ServletContextListener {
 	private TeamsDAO teamsDAO;
 	private CrawlerDAO crawlerDAO;
 	private SupervisorDAO supervisorDAO;
+	private StemsDAO stemsDAO;
+	private LuceneUtilities LUCENE_UTILITIES;
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
@@ -38,6 +42,8 @@ public class InitializeLibraries implements ServletContextListener {
 		teamsDAO = new TeamsDAO(dao);
 		crawlerDAO = new CrawlerDAO(dao);
 		supervisorDAO = new SupervisorDAO(dao);
+		stemsDAO = new StemsDAO(dao);
+		LUCENE_UTILITIES = new LuceneUtilities();
 		
 		try {
 			Connection conn = dao.getConnection();
@@ -58,6 +64,8 @@ public class InitializeLibraries implements ServletContextListener {
 		sc.setAttribute("teamsDAO", teamsDAO);
 		sc.setAttribute("crawlerDAO", crawlerDAO);
 		sc.setAttribute("supervisorDAO", supervisorDAO);
+		sc.setAttribute("stemsDAO", stemsDAO);
+		sc.setAttribute("luceneUtilities", LUCENE_UTILITIES);
 	}
 
 }

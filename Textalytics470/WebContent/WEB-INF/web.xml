@@ -59,6 +59,17 @@
   </servlet-mapping>
   
   <servlet>
+    <description>Keyphrase Extraction</description>
+    <display-name>KeyPhraseServlet</display-name>
+    <servlet-name>KeyPhraseServlet</servlet-name>
+    <servlet-class>textalytics.servlet.KeyPhraseServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>KeyPhraseServlet</servlet-name>
+    <url-pattern>/keyphrase</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
 	  <servlet-name>database.jsp</servlet-name>
 	  <jsp-file>/database.jsp</jsp-file>
   </servlet>
